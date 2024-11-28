@@ -3,93 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toko Online</title>
+    <title>Toko Online - Login</title>
     <style>
-        /* Gaya Umum */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-
-        header {
-            background-color: #ff5722;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-        }
-
-        .login-container {
-            text-align: center;
-            margin: 20px;
-        }
-
-        .login-container button {
-            display: block;
-            width: 80%;
-            max-width: 300px;
-            margin: 10px auto;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .btn-google {
-            background-color: #db4437;
-            color: white;
-        }
-
-        .btn-phone {
-            background-color: #0f9d58;
-            color: white;
-        }
-
-        .btn-email {
-            background-color: #4285f4;
-            color: white;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f9f9f9; }
+        header { background-color: #ff5722; color: white; text-align: center; padding: 10px; }
+        .login-container { text-align: center; margin: 20px; }
+        .login-container button { width: 80%; max-width: 300px; margin: 10px auto; padding: 10px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        .btn-google { background-color: #db4437; color: white; }
+        .btn-phone { background-color: #0f9d58; color: white; }
+        .btn-email { background-color: #4285f4; color: white; }
     </style>
-    <!-- Tambahkan Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js"></script>
 </head>
 <body>
-
-    <!-- Header -->
     <header>
-        Toko Online - Promo Terbaik
+        Toko Online - Login
     </header>
-
-    <!-- Login/Register -->
     <div class="login-container">
         <h2>Login atau Registrasi</h2>
         <button class="btn-google" id="googleLogin">Login dengan Google</button>
         <button class="btn-phone" id="phoneLogin">Login dengan Nomor Telepon</button>
         <button class="btn-email" id="emailLogin">Login dengan Email</button>
     </div>
-
-    <!-- Tambahkan elemen untuk reCAPTCHA -->
     <div id="recaptcha-container"></div>
 
     <!-- Firebase Initialization -->
-    <script>
-        // Konfigurasi Firebase
-        import { initializeApp } from "firebase/app";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+    <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, RecaptchaVerifier, signInWithPhoneNumber, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBAA0WdhfX3yqXhVXsBoT6FP386YX_b5xo",
             authDomain: "web-profile-1a15b.firebaseapp.com",
             projectId: "web-profile-1a15b",
             storageBucket: "web-profile-1a15b.firebasestorage.app",
             messagingSenderId: "878572807565",
-            appId: "1:878572807565:web:1ff77da9b899f4c55949c4"
+            appId: "1:878572807565:web:1ff77da9b899f4c55949c4",
+            measurementId: "G-S3820RK12P"
         };
 
-        // Inisialisasi Firebase
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
@@ -111,9 +65,10 @@
             const appVerifier = new RecaptchaVerifier('recaptcha-container', {
                 size: 'invisible'
             }, auth);
+
             signInWithPhoneNumber(auth, phoneNumber, appVerifier)
                 .then(confirmationResult => {
-                    const code = prompt("Masukkan kode verifikasi yang diterima:");
+                    const code = prompt("Masukkan kode verifikasi:");
                     return confirmationResult.confirm(code);
                 })
                 .then(result => {
@@ -124,7 +79,7 @@
                 });
         });
 
-        // Login dengan Email
+        // Login atau Registrasi dengan Email
         document.getElementById('emailLogin').addEventListener('click', () => {
             const email = prompt("Masukkan email Anda:");
             const password = prompt("Masukkan password Anda:");
