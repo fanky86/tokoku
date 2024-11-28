@@ -71,9 +71,15 @@
         <button class="btn-email" id="emailLogin">Login dengan Email</button>
     </div>
 
+    <!-- Tambahkan elemen untuk reCAPTCHA -->
+    <div id="recaptcha-container"></div>
+
     <!-- Firebase Initialization -->
     <script>
         // Konfigurasi Firebase
+        import { initializeApp } from "firebase/app";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+
         const firebaseConfig = {
             apiKey: "AIzaSyBAA0WdhfX3yqXhVXsBoT6FP386YX_b5xo",
             authDomain: "web-profile-1a15b.firebaseapp.com",
@@ -84,13 +90,13 @@
         };
 
         // Inisialisasi Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
         // Login dengan Google
         document.getElementById('googleLogin').addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider)
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
                 .then(result => {
                     alert(`Selamat datang, ${result.user.displayName}`);
                 })
@@ -102,13 +108,10 @@
         // Login dengan Nomor Telepon
         document.getElementById('phoneLogin').addEventListener('click', () => {
             const phoneNumber = prompt("Masukkan nomor telepon Anda (dengan kode negara):");
-            const appVerifier = new firebase.auth.RecaptchaVerifier('phoneLogin', {
-                size: 'invisible',
-                callback: response => {
-                    alert('Verifikasi berhasil!');
-                }
-            });
-            auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+            const appVerifier = new RecaptchaVerifier('recaptcha-container', {
+                size: 'invisible'
+            }, auth);
+            signInWithPhoneNumber(auth, phoneNumber, appVerifier)
                 .then(confirmationResult => {
                     const code = prompt("Masukkan kode verifikasi yang diterima:");
                     return confirmationResult.confirm(code);
@@ -125,13 +128,13 @@
         document.getElementById('emailLogin').addEventListener('click', () => {
             const email = prompt("Masukkan email Anda:");
             const password = prompt("Masukkan password Anda:");
-            auth.signInWithEmailAndPassword(email, password)
+            signInWithEmailAndPassword(auth, email, password)
                 .then(result => {
                     alert(`Selamat datang, ${result.user.email}`);
                 })
                 .catch(error => {
                     if (error.code === 'auth/user-not-found') {
-                        auth.createUserWithEmailAndPassword(email, password)
+                        createUserWithEmailAndPassword(auth, email, password)
                             .then(result => {
                                 alert(`Akun berhasil dibuat, selamat datang ${result.user.email}`);
                             })
