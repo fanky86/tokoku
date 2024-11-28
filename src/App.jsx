@@ -1,16 +1,11 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./Login";
-import Home from "./Home";
+import Login from "./login"; // Mengimpor komponen Login
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
-    </Router>
+    <div>
+      <Login /> {/* Menampilkan komponen Login */}
+    </div>
   );
 };
 
